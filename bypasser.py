@@ -2456,6 +2456,88 @@ def kingurl(url):
     final_url = f"{DOMAIN}={code}"
     return final_url
 #####################################################################################################
+
+#####################################################################################################
+# vplink
+
+
+def vplink(url):
+    client = cloudscraper.create_scraper(allow_brotli=False)
+    DOMAIN = "https://vplink.in"
+    url = url[:-1] if url[-1] == "/" else url
+    code = url.split("/")[-1]
+    final_url = f"{DOMAIN}/{code}"
+    ref = "https://insurance.findaoa.com/"
+    h = {"referer": ref}
+    resp = client.get(final_url, headers=h)
+    soup = BeautifulSoup(resp.content, "html.parser")
+    inputs = soup.find_all("input")
+    data = {input.get("name"): input.get("value") for input in inputs if input.get("name")}
+    h = {"x-requested-with": "XMLHttpRequest", "referer": final_url}
+    time.sleep(5)
+    r = client.post(f"{DOMAIN}/links/go", data=data, headers=h)
+    try:
+        return str(r.json()["url"])
+    except BaseException:
+        return "Something went wrong :("
+
+
+#####################################################################################################
+# linksfire
+
+
+def linksfire(url):
+    client = cloudscraper.create_scraper(allow_brotli=False)
+    DOMAIN = "https://blog.linksfire.co"
+    url = url[:-1] if url[-1] == "/" else url
+    code = url.split("/")[-1]
+    final_url = f"{DOMAIN}/{code}"
+    ref = "https://step.linksfire.co/"
+    h = {"referer": ref}
+    resp = client.get(final_url, headers=h)
+    soup = BeautifulSoup(resp.content, "html.parser")
+    inputs = soup.find_all("input")
+    data = {input.get("name"): input.get("value") for input in inputs if input.get("name")}
+    h = {"x-requested-with": "XMLHttpRequest", "referer": final_url}
+    time.sleep(6)
+    r = client.post(f"{DOMAIN}/links/go", data=data, headers=h)
+    try:
+        return str(r.json()["url"])
+    except BaseException:
+        return "Something went wrong :("
+
+
+#####################################################################################################
+# arolinks
+
+
+def arolinks(url):
+    client = cloudscraper.create_scraper(allow_brotli=False)
+    DOMAIN = "https://arolinks.com"
+    url = url[:-1] if url[-1] == "/" else url
+    code = url.split("/")[-1]
+    final_url = f"{DOMAIN}/{code}"
+    resp = client.get(final_url)
+    if match := re.search(r'window\.location\.href\s*=\s*["']([^"']+)["']', resp.text):
+        ref = match.group(1)
+    elif a_tag := BeautifulSoup(resp.text, "html.parser").find("a", href=True):
+        ref = a_tag["href"]
+    else:
+        ref = "https://www.RKumar.in/"
+    h = {"referer": ref}
+    resp = client.get(final_url, headers=h)
+    soup = BeautifulSoup(resp.content, "html.parser")
+    inputs = soup.find_all("input")
+    data = {input.get("name"): input.get("value") for input in inputs if input.get("name")}
+    h = {"x-requested-with": "XMLHttpRequest", "referer": final_url}
+    time.sleep(5)
+    r = client.post(f"{DOMAIN}/links/go", data=data, headers=h)
+    try:
+        return str(r.json()["url"])
+    except BaseException:
+        return "Something went wrong :("
+
+#####################################################################################################
 # helpers
 
 
@@ -2762,6 +2844,21 @@ def shortners(url):
     elif "https://kingurl.in/" in url:
         print("entered kingurl:", url)
         return kingurl(url)
+
+    # vplink
+    elif "vplink.in" in url:
+        print("entered vplink:", url)
+        return vplink(url)
+
+    # linksfire
+    elif "linksfire.co" in url:
+        print("entered linksfire:", url)
+        return linksfire(url)
+
+    # arolinks
+    elif "arolinks.com" in url:
+        print("entered arolinks:", url)
+        return arolinks(url)
 
     # htpmovies sharespark cinevood
     elif (
