@@ -114,6 +114,9 @@ shortnertext = """__- igg-games \n\
 - lolshort \n\
 - tnvalue \n\
 - vipurl \n\
+- vplink \n\
+- linksfire \n\
+- arolinks \n\
 __"""
 
 
